@@ -1,6 +1,5 @@
 // C# code for compute invertion 8 x 8 matrix by willnode and ThomasCZ
 
-
 var A6767 = m.m66 * m.m77 - m.m67 * m.m76;
 var A5767 = m.m65 * m.m77 - m.m67 * m.m75;
 var A5667 = m.m65 * m.m76 - m.m66 * m.m75;

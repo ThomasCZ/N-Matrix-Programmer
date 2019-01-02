@@ -1,6 +1,5 @@
 // C++ code for compute invertion 8 x 8 matrix by willnode and ThomasCZ
 
-
 float a6767 = mat.mat[54] * mat.mat[63] - mat.mat[55] * mat.mat[62];
 float a5767 = mat.mat[53] * mat.mat[63] - mat.mat[55] * mat.mat[61];
 float a5667 = mat.mat[53] * mat.mat[62] - mat.mat[54] * mat.mat[61];

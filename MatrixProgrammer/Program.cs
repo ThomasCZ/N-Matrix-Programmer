@@ -3,73 +3,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MatrixProgrammer
-{
-	class Program
-	{
-        /// <summary>
-        /// Number of matrix rows X colums
-        /// </summary>
-		static int MatrixSize = 4;
-        /// <summary>
-        /// Optimization Level. Adjusted automatically
-        /// </summary>
-        static int O = 1;
+namespace MatrixProgrammer {
+    class Program {
 
-        static StringBuilder STROB = new StringBuilder();
-        static string STRO(int[] t, int[] u)
-        {
-            STROB.Clear();
-            STROB.Append(((char)((formatter.IsCacheMemberUppercase() ? '?' : '_') + t.Length)).ToString());
-            STROB.Append(string.Join("", t));
-            STROB.Append(string.Join("", u));
-            return STROB.ToString();
+        static public void Main(string[] args) {
+            new Program().Run(args);
         }
 
-        //
-        // String formats which you're free to change
-        //
-        static OutputFormatter formatter;
+        private OutputFormatter Formatter;
+        private int MatrixSize = 4;
+        private int O = 1;
 
-        static public void Main(string[] args)
-		{
-			CheckArguments(args);
+        private List<Dictionary<string, string>> CachedNSets = new List<Dictionary<string, string>>();
+        private StringBuilder GlobalStringBuilder = new StringBuilder();
 
-            var S = new StringBuilder();
-			var S2 = new StringBuilder();
-			WriteDeterminant(MatrixSize, S);
-			WriteInverse(MatrixSize, S2);
+        public void Run(string[] args) {
+            CheckArguments(args);
+
+            var stringBuilderOne = new StringBuilder();
+            var stringBuilderTwo = new StringBuilder();
+
+            Console.WriteLine("// " + (Formatter is CPPOutputFormatter ? "C++" : "C#") + " code for compute invertion " + MatrixSize + " x " + MatrixSize + " matrix by willnode and ThomasCZ");
+            Console.WriteLine();
+
+            WriteDeterminant(MatrixSize, stringBuilderOne);
+            WriteInverse(MatrixSize, stringBuilderTwo);
 
             if (O >= 2)
                 WriteCachedCodes();
-			Console.WriteLine(formatter.Determinant(S.ToString()));
-			Console.WriteLine(formatter.Result(MatrixSize, S2.ToString()));
+
+            Console.WriteLine(Formatter.Determinant(stringBuilderOne.ToString()));
+            Console.WriteLine(Formatter.Result(MatrixSize, stringBuilderTwo.ToString()));
         }
 
-		static void CheckArguments (string[] args)
-		{
-            if (args.Length == 4)
-            {
-                for (int i = 0; i < args.Length; i += 2)
-                {
-                    switch (args[i])
-                    {
+        private void CheckArguments(string[] args) {
+            if (args.Length == 4) {
+                for (int i = 0; i < args.Length; i += 2) {
+                    switch (args[i]) {
                         case "-n":
-                          
-                            if (!int.TryParse(args[i + 1], out MatrixSize))
-                            {
+                            if (!int.TryParse(args[i + 1], out MatrixSize)) {
                                 Console.WriteLine("Wrong matrix size");
                                 Environment.Exit(0);
                             }
+
+                            O = Math.Max(MatrixSize - 2, 1);
                             break;
                         case "-f":
-                            switch (args[i + 1])
-                            {
+                            switch (args[i + 1]) {
                                 case "cpp":
-                                    formatter = new CPPOutputFormatter();
+                                    Formatter = new CPPOutputFormatter();
                                     break;
                                 case "cs":
-                                    formatter = new CSharpOutputFormatter();
+                                    Formatter = new CSharpOutputFormatter();
                                     break;
                                 default:
                                     Console.WriteLine("Invalid format");
@@ -77,11 +62,13 @@ namespace MatrixProgrammer
                                     break;
                             }
                             break;
+                        default:
+                            Console.WriteLine("Illegal argument");
+                            Environment.Exit(0);
+                            break;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 Console.WriteLine("Following arguments can be used:");
                 Console.WriteLine("\t-n [int] ... size of the matrix");
                 Console.WriteLine("\t-f [cpp, cs] ... code formatting");
@@ -89,145 +76,121 @@ namespace MatrixProgrammer
                 Console.WriteLine("\t\t cs ... C# code style");
                 Environment.Exit(0);
             }
+        }
 
-            Console.WriteLine("// " + (formatter is CPPOutputFormatter ? "C++" : "C#")+ " code for compute invertion " + MatrixSize + " x " + MatrixSize + " matrix by willnode and ThomasCZ");
+        private void WriteDeterminant(int n, StringBuilder stringBuilder) {
+            var xRange = Enumerable.Range(0, n).ToArray();
+            var yRange = Enumerable.Range(0, n).ToArray();
+            WriteDeterminant(n, xRange, yRange, stringBuilder, true);
+        }
 
-            if (MatrixSize > 3)
-                O = MatrixSize - 2;
-            else
-                O = 1;
-		}
-
-		static void WriteDeterminant (int N, StringBuilder S)
-		{
-			var X = Enumerable.Range(0, N).ToArray();
-			var Y = Enumerable.Range(0, N).ToArray();
-			WriteDeterminant(N, X, Y, S, true);
-		}
-
-		static void WriteDeterminant (int N, int[] X, int[] Y, StringBuilder S, bool NS)
-		{
-            if (O >= N && O >= 2)
-            {
-                S.Append(WriteOptimizedNDet(N, X, Y));
+        private void WriteDeterminant(int n, int[] xRange, int[] yRange, StringBuilder stringBuilder, bool newLine) {
+            if (O >= n && O >= 2) {
+                stringBuilder.Append(WriteOptimizedNDet(n, xRange, yRange));
                 return;
             }
 
             bool plus = true;
-			for (int i = 0; i < N; i++)
-			{
-				// Sign (and necessary stylings)
-				if (i > 0)
-				{
-					if (NS)
-						S.Append("\n\t");
-					S.Append(plus ? " + " : " - ");
-				}
+            for (int i = 0; i < n; i++) {
+                if (i > 0) {
+                    if (newLine)
+                        stringBuilder.Append("\n\t");
+                    stringBuilder.Append(plus ? " + " : " - ");
+                }
 
-				// Write this member
-                int x = X[i];
-				int y = Y[0];
-				S.Append(formatter.SourceMatrixElement(MatrixSize, y, x));
-				plus = !plus;
+                int x = xRange[i];
+                int y = yRange[0];
+                stringBuilder.Append(Formatter.SourceMatrixElement(MatrixSize, y, x));
+                plus = !plus;
 
-				// Take recursive call at minor matrix
-                if (N > 1)
-				{
-					if (ShouldAddBracket(N))
-						S.Append(" * (");
-					else
-						S.Append(" * ");
-					WriteDeterminant(N - 1, X.Where(n => n != x).ToArray(), Y.Where(n => n != y).ToArray(), S, false);
-					if (ShouldAddBracket(N))
-						S.Append(")");
-				}
-			}
-		}
+                if (n > 1) {
+                    stringBuilder.Append(" * ");
 
-        static bool ShouldAddBracket (int N)
-        {
-             return N > O + 1;
+                    if (ShouldAddBracket(n))
+                        stringBuilder.Append("(");
+
+                    WriteDeterminant(n - 1, xRange.Where(j => j != x).ToArray(), yRange.Where(j => j != y).ToArray(), stringBuilder, false);
+                    if (ShouldAddBracket(n))
+                        stringBuilder.Append(")");
+                }
+            }
         }
 
-       
-        static string WriteOptimizedNDet(int N, int[] X, int[] Y)
-        {
-            var S = new StringBuilder();
-            var C = GetCacheSets(N);
-            var M = STRO(X, Y);
-            if (!C.ContainsKey(M))
-            {
-                if (N > 2)
-                {
-                    bool plus = true;
-                    for (int i = 0; i < N; i++)
-                    {
-                        // Sign (and necessary stylings)
-                        if (i > 0)
-                            S.Append(plus ? " + " : " - ");
+        private bool ShouldAddBracket(int n) {
+            return n > O + 1;
+        }
 
-                        // Write this member
-                        int x = X[i];
-                        int y = Y[0];
-                        S.Append(formatter.SourceMatrixElement(MatrixSize, y, x));
+        private string WriteOptimizedNDet(int n, int[] xRange, int[] yRange) {
+            var stringBuilder = new StringBuilder();
+            var chacheSets = GetCacheSets(n);
+            var cacheVar = CreateCacheVarName(xRange, yRange);
+
+            if (!chacheSets.ContainsKey(cacheVar)) {
+                if (n > 2) {
+                    bool plus = true;
+                    for (int i = 0; i < n; i++) {
+                        if (i > 0)
+                            stringBuilder.Append(plus ? " + " : " - ");
+
+                        int x = xRange[i];
+                        int y = yRange[0];
+                        stringBuilder.Append(Formatter.SourceMatrixElement(MatrixSize, y, x));
                         plus = !plus;
 
-                        // Take recursive call at minor matrix
-                        S.Append(" * ");
-                        S.Append(WriteOptimizedNDet(N - 1, X.Where(n => n != x).ToArray(), Y.Where(n => n != y).ToArray()));
+                        stringBuilder.Append(" * ");
+                        stringBuilder.Append(WriteOptimizedNDet(n - 1, xRange.Where(j => j != x).ToArray(), yRange.Where(j => j != y).ToArray()));
                     }
                 } else
-                    S.AppendFormat(formatter.CacheContent(formatter.SourceMatrixElement(MatrixSize, Y[0], X[0]), formatter.SourceMatrixElement(MatrixSize, Y[1], X[1]), formatter.SourceMatrixElement(MatrixSize, Y[0], X[1]), formatter.SourceMatrixElement(MatrixSize, Y[1], X[0])));
+                    stringBuilder.AppendFormat(Formatter.CacheContent(Formatter.SourceMatrixElement(MatrixSize, yRange[0], xRange[0]), Formatter.SourceMatrixElement(MatrixSize, yRange[1], xRange[1]), Formatter.SourceMatrixElement(MatrixSize, yRange[0], xRange[1]), Formatter.SourceMatrixElement(MatrixSize, yRange[1], xRange[0])));
 
-                C[M] = formatter.CacheMember(M, S.ToString());
-                S.Clear();
+                chacheSets[cacheVar] = Formatter.CacheMember(cacheVar, stringBuilder.ToString());
+                stringBuilder.Clear();
             }
-            return M;
+
+            return cacheVar;
         }
 
-      
+        private void WriteCachedCodes() {
+            foreach (var i in CachedNSets) {
+                if (i.Count == 0)
+                    continue;
 
-        static void WriteCachedCodes ()
-        {
-            foreach (var I in CachedNSets)
-            {
-                foreach (var J in I)
-                {
-                    Console.WriteLine(J.Value);
-                }
+                foreach (var j in i)
+                    Console.WriteLine(j.Value);
+
                 Console.WriteLine();
             }
         }
 
-        static List<Dictionary<string, string>> CachedNSets = new List<Dictionary<string, string>>();
-
-        static Dictionary<string, string> GetCacheSets (int N)
-        {
-            while (CachedNSets.Count < N + 1)
-            {
+        private Dictionary<string, string> GetCacheSets(int n) {
+            while (CachedNSets.Count < n + 1)
                 CachedNSets.Add(new Dictionary<string, string>());
-            }
-            return CachedNSets[N];
+
+            return CachedNSets[n];
         }
 
-        static void WriteInverse(int N, StringBuilder S)
-        {
-            var S2 = new StringBuilder();
+        private void WriteInverse(int n, StringBuilder stringBuilder) {
+            var stringBuilderTwo = new StringBuilder();
 
-            var X = Enumerable.Range(0, N).ToArray();
-            var Y = Enumerable.Range(0, N).ToArray();
+            var xRange = Enumerable.Range(0, n).ToArray();
+            var yRange = Enumerable.Range(0, n).ToArray();
 
-            for (int y = 0; y < N; y++)
-            {
-                for (int x = 0; x < N; x++) 
-                {
+            for (int y = 0; y < n; y++) {
+                for (int x = 0; x < n; x++) {
                     var plus = (x + y) % 2 == 1 ? "-" : "";
-                    // X and y flipped here for traverse matrix
-                    WriteDeterminant(N - 1, Y.Where(n => n != y).ToArray(), X.Where(n => n != x).ToArray(), S2, false);
-                    S.AppendLine(formatter.InverseMember(formatter.MatrixElement(MatrixSize, y, x), plus, S2.ToString()));
-                    S2.Clear();
+                    WriteDeterminant(n - 1, yRange.Where(i => i != y).ToArray(), xRange.Where(i => i != x).ToArray(), stringBuilderTwo, false);
+                    stringBuilder.AppendLine(Formatter.InverseMember(Formatter.MatrixElement(MatrixSize, y, x), plus, stringBuilderTwo.ToString()));
+                    stringBuilderTwo.Clear();
                 }
             }
+        }
+
+        private string CreateCacheVarName(int[] t, int[] u) {
+            GlobalStringBuilder.Clear();
+            GlobalStringBuilder.Append(((char)((Formatter.IsCacheMemberUppercase() ? '?' : '_') + t.Length)).ToString());
+            GlobalStringBuilder.Append(string.Join("", t));
+            GlobalStringBuilder.Append(string.Join("", u));
+            return GlobalStringBuilder.ToString();
         }
     }
 }

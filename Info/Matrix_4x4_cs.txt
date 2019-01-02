@@ -1,6 +1,5 @@
 // C# code for compute invertion 4 x 4 matrix by willnode and ThomasCZ
 
-
 var A2323 = m.m22 * m.m33 - m.m23 * m.m32;
 var A1323 = m.m21 * m.m33 - m.m23 * m.m31;
 var A1223 = m.m21 * m.m32 - m.m22 * m.m31;

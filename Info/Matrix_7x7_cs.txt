@@ -1,6 +1,5 @@
 // C# code for compute invertion 7 x 7 matrix by willnode and ThomasCZ
 
-
 var A5656 = m.m55 * m.m66 - m.m56 * m.m65;
 var A4656 = m.m54 * m.m66 - m.m56 * m.m64;
 var A4556 = m.m54 * m.m65 - m.m55 * m.m64;

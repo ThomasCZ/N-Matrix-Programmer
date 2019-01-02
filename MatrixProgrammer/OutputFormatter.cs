@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MatrixProgrammer
-{
-    interface OutputFormatter
-    {
+﻿namespace MatrixProgrammer {
+    interface OutputFormatter {
         string MatrixElement(int matrixSize, int row, int column);
 
         string SourceMatrixElement(int matrixSize, int row, int column);

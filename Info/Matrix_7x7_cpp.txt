@@ -1,6 +1,5 @@
 // C++ code for compute invertion 7 x 7 matrix by willnode and ThomasCZ
 
-
 float a5656 = mat.mat[40] * mat.mat[48] - mat.mat[41] * mat.mat[47];
 float a4656 = mat.mat[39] * mat.mat[48] - mat.mat[41] * mat.mat[46];
 float a4556 = mat.mat[39] * mat.mat[47] - mat.mat[40] * mat.mat[46];

@@ -1,6 +1,5 @@
 // C# code for compute invertion 10 x 10 matrix by willnode and ThomasCZ
 
-
 var A8989 = m.m88 * m.m99 - m.m89 * m.m98;
 var A7989 = m.m87 * m.m99 - m.m89 * m.m97;
 var A7889 = m.m87 * m.m98 - m.m88 * m.m97;

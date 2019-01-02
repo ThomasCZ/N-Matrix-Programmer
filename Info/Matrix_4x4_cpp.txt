@@ -1,6 +1,5 @@
 // C++ code for compute invertion 4 x 4 matrix by willnode and ThomasCZ
 
-
 float a2323 = mat.mat[10] * mat.mat[15] - mat.mat[11] * mat.mat[14];
 float a1323 = mat.mat[9] * mat.mat[15] - mat.mat[11] * mat.mat[13];
 float a1223 = mat.mat[9] * mat.mat[14] - mat.mat[10] * mat.mat[13];

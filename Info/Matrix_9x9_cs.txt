@@ -1,6 +1,5 @@
 // C# code for compute invertion 9 x 9 matrix by willnode and ThomasCZ
 
-
 var A7878 = m.m77 * m.m88 - m.m78 * m.m87;
 var A6878 = m.m76 * m.m88 - m.m78 * m.m86;
 var A6778 = m.m76 * m.m87 - m.m77 * m.m86;

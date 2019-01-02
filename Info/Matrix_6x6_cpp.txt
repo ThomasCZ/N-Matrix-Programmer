@@ -1,6 +1,5 @@
 // C++ code for compute invertion 6 x 6 matrix by willnode and ThomasCZ
 
-
 float a4545 = mat.mat[28] * mat.mat[35] - mat.mat[29] * mat.mat[34];
 float a3545 = mat.mat[27] * mat.mat[35] - mat.mat[29] * mat.mat[33];
 float a3445 = mat.mat[27] * mat.mat[34] - mat.mat[28] * mat.mat[33];

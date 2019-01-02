@@ -1,6 +1,5 @@
 // C# code for compute invertion 5 x 5 matrix by willnode and ThomasCZ
 
-
 var A3434 = m.m33 * m.m44 - m.m34 * m.m43;
 var A2434 = m.m32 * m.m44 - m.m34 * m.m42;
 var A2334 = m.m32 * m.m43 - m.m33 * m.m42;

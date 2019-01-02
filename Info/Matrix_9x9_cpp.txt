@@ -1,6 +1,5 @@
 // C++ code for compute invertion 9 x 9 matrix by willnode and ThomasCZ
 
-
 float a7878 = mat.mat[70] * mat.mat[80] - mat.mat[71] * mat.mat[79];
 float a6878 = mat.mat[69] * mat.mat[80] - mat.mat[71] * mat.mat[78];
 float a6778 = mat.mat[69] * mat.mat[79] - mat.mat[70] * mat.mat[78];

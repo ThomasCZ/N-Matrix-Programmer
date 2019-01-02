@@ -1,6 +1,5 @@
 // C++ code for compute invertion 5 x 5 matrix by willnode and ThomasCZ
 
-
 float a3434 = mat.mat[18] * mat.mat[24] - mat.mat[19] * mat.mat[23];
 float a2434 = mat.mat[17] * mat.mat[24] - mat.mat[19] * mat.mat[22];
 float a2334 = mat.mat[17] * mat.mat[23] - mat.mat[18] * mat.mat[22];

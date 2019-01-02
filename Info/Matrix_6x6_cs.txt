@@ -1,6 +1,5 @@
 // C# code for compute invertion 6 x 6 matrix by willnode and ThomasCZ
 
-
 var A4545 = m.m44 * m.m55 - m.m45 * m.m54;
 var A3545 = m.m43 * m.m55 - m.m45 * m.m53;
 var A3445 = m.m43 * m.m54 - m.m44 * m.m53;
